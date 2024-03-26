@@ -11,8 +11,8 @@ if (length(args) == 0) {
 }
 
 dir <- normalizePath(args[1])
-gap <- normalizePath(args[4])
-telom <- normalizePath(args[5])
+gap <- normalizePath(args[2])
+telom <- normalizePath(args[3])
 
 setwd(dir)
 print(getwd())
@@ -44,13 +44,14 @@ df_final <- df_new %>%
     q > 50 ~ "q",
     TRUE ~ "0"),
     t2t = case_when(
-      telomere == "pq" & is.na(gapcount) ~ "T2T",
-      telomere == "pq" & !is.na(gapcount) ~ "TgapT"
-      telomere == "p" & is.na(gapcount) ~ "T2noT",
-      telomere == "p" & !is.na(gapcount) ~ "TgapnoT",
-      telomere == "q" & is.na(gapcount) ~ "noT2T",
-      telomere == "q" & !is.na(gapcount) ~ "noTgapT",
-      TRUE ~ "no")) %>%
+      telomere == "pq" & is.na(gapcount) ~ "T-2-T",
+      telomere == "pq" & !is.na(gapcount) ~ "T-gap-T",
+      telomere == "p" & is.na(gapcount) ~ "T-nogap-noT",
+      telomere == "p" & !is.na(gapcount) ~ "T-gap-noT",
+      telomere == "q" & is.na(gapcount) ~ "noT-nogap-T",
+      telomere == "q" & !is.na(gapcount) ~ "noT-gap-T",
+      is.na(telomere) & !is.na(gapcount) ~ "noT-nogap-noT",
+      TRUE ~ "noT-gap-noT")) %>%
   select(chr,
          completion = t2t,
          contig_name = query_name, 

@@ -73,10 +73,6 @@ for k in *_order.list; do
   fi
 done
 
-## gepard not working on slurm because of JAVA problem: version `ZLIB_1.2.9' not found
-## it runs on the terminal but not on slurm
-## tried installing java on conda, but getting fonts problem
-
 echo -e "Concatenating chromosomes into one fasta"
 cd "$dir/combine"
 if [ -e "../$outname" ]; then

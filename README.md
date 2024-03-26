@@ -1,5 +1,6 @@
 # assembly_initialqc
-Script for checking homologous chromosomes with a reference genome and checking gap and telomeric sequence presence after contig assembly. 
+
+Script for checking homologous chromosomes with a reference genome and checking gap and telomeric sequence presence after contig assembly.
 
 ## REQUIREMENTS
 
