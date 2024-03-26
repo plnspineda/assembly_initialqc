@@ -13,17 +13,17 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
 1. Clone the repository:
 
-    git clone https://github.com/plnspineda/assembly_initialqc.git
-    cd assembly_initialqc
+        git clone https://github.com/plnspineda/assembly_initialqc.git
+        cd assembly_initialqc
 
 2. Create a conda environment:
 
-    conda env create --file initialqc-env.yml
+        conda env create --file initialqc-env.yml
 
 3. Run
 
-    export QC="$PWD"
-    $QC/assembly_initialqc.sh
+        export QC="$PWD"
+        $QC/assembly_initialqc.sh
 
 ## Usage
 
