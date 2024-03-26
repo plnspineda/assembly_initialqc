@@ -85,8 +85,8 @@ else
     ls ./*fasta | sort -n
     # cat "$(ls -v combine/*[0-9].fasta)" > "$outname"
     cat $(ls ./*[0-9].fasta | sort -V) > ../"$outname"
-    X=$(stat -f %z "X.fasta")
-    Y=$(stat -f %z "Y.fasta")
+    X=$(stat -c %s "X.fasta")
+    Y=$(stat -c %s "Y.fasta")
 
     if [ $X -gt 4096 ] && [ $Y -gt 4 ]; then
       cat "X.fasta" "Y.fasta" >> ../"$outname"
@@ -119,8 +119,8 @@ tidk search -s TTAGGG -o Y_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/Y.
 
 echo -e "Generating plot for sex chromosomes."
 
-x_size=$(stat -f %z "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv)
-y_size=$(stat -f %z "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv)
+x_size=$(stat -c %s "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv)
+y_size=$(stat -c %s "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv)
 
 if [ "$x_size" -gt 4096 ]; then
 	tidk plot -o X_tidk-plot -t "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv
