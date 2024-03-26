@@ -38,6 +38,8 @@ wherein:
 
 ## Expected output files
 
+The final output information that will tell status of chromosomes can be found in `all_STATS.tsv` (eg. if T2T, TgapT, etc.)
+
 file:
 
     - all_chr_assembly.tsv (incomplete information about each homologous contigs, can be deleted)
