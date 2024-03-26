@@ -8,6 +8,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
 - [minimap2](https://github.com/lh3/minimap2)
 - [tidk](https://github.com/tolkit/telomeric-identifier)
 - [seqtk](https://github.com/lh3/seqtk)
+- [Java](https://www.java.com/en/)
 
 ## Installation
 
@@ -69,4 +70,5 @@ You can just install `tidk` and run the following modules:
         module load Java/17.0.6
         module load seqtk/1.3-GCC-11.2.0
 
+This script also uses [CombineFasta](https://github.com/njdbickhart/CombineFasta) to reorient the contigs in the same orientation as the reference genome.
 *still under development*
