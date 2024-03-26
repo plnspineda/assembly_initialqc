@@ -21,6 +21,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
 2. Create a conda environment (Optional if you already have the tools specified in requirements):
 
         conda env create --file initialqc-env.yml
+        conda activate initialqc
 
 3. Run
 
