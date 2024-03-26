@@ -16,7 +16,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
         git clone https://github.com/plnspineda/assembly_initialqc.git
         cd assembly_initialqc
 
-2. Create a conda environment:
+2. Create a conda environment (Optional if you already have the tools specified in requirements):
 
         conda env create --file initialqc-env.yml
 
@@ -56,5 +56,17 @@ folders:
     - archived (contains detailed information of the alignment per chromosomes)
     - contig_list (contains lists of contigs, orientation and proportion with the reference genome)
     - combine (contains fasta file of each chromosomes)
+
+## To run in phoenix server
+
+You can just install `tidk` and run the following modules:
+
+        module purge
+        module use /apps/modules/all
+        module load R
+        module load SAMtools/1.17-GCC-11.2.0
+        module load minimap2/2.26-GCCcore-11.2.0
+        module load Java/17.0.6
+        module load seqtk/1.3-GCC-11.2.0
 
 *still under development*
