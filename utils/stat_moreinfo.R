@@ -74,6 +74,7 @@ df_final <- df_new %>%
       )) %>%
   select(chr,
          completion,
+         score,
          contig_name = query_name, 
          contig, 
          query_length, 
