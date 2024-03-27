@@ -30,7 +30,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
 ## Usage
 
-    $QC/assembly_initialqc.sh ref.fa asm.fa outdir assembly.scfmap assembly.paths.tsv 
+    $QC/assembly_initialqc.sh ref.fa asm.fa outdir assembly.scfmap assembly.paths.tsv 4
 
 wherein:
 
@@ -38,6 +38,7 @@ wherein:
 - `asm.fa` is the draft contig assembly
 - `outdir` is the output directory (will make one if the folder do not exists)
 - `assembly.scfmap` is an output from verkko along with `assembly.paths`. These are used to get the pathname and nodes for each chromosome/contig.
+- `4` is the number of threads
 
 ## Expected output files
 

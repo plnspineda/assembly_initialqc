@@ -54,8 +54,9 @@ df_final <- df_new %>%
       is.na(telomere) & !is.na(gapcount) ~ "noT_nogap_noT",
       TRUE ~ "noT_gap_noT"),
       score = case_when(
-        telomere == "pq" ~ "2",
-        telomere == "p" | telomere == "q" ~ "1",
+        telomere == "pq" ~ "1",
+        telomere == "p" ~ "p0.5",
+        telomere == "q" ~ "q0.5",
         TRUE ~ "0"
       )) %>%
   select(chr,
