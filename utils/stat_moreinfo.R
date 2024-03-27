@@ -46,7 +46,7 @@ tlm <- telomere %>%
 
 key <- merge(path, map, by = "name")
 df_new <- merge(df, coor, by = "chr", all.x = TRUE)
-df_new <- merge(df_new, key, by = "query_name")
+df_new <- merge(df_new, key, by = "query_name", all.x = TRUE)
 df_new <-  merge(df_new, tlm, by = "chr", all.x = TRUE)
 
 # creating the table
