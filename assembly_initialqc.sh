@@ -78,9 +78,9 @@ cd "$dir/combine"
 if [ -e "../$outname" ]; then
     echo "$outname exists. Skipping."
 else
-    ls ./*fasta | sort -n
+    ls ./*fasta | sort -V
     # cat "$(ls -v combine/*[0-9].fasta)" > "$outname"
-    cat $(ls ./*[0-9].fasta | sort -V) > ../"$outname"
+    cat $(ls -v ./*[0-9].fasta) > ../"$outname"
     X=$(stat -c %s "X.fasta")
     Y=$(stat -c %s "Y.fasta")
 

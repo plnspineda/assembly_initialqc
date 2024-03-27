@@ -4,6 +4,7 @@ library(stringr)
 library(tidyr)
 
 ## This is version 2.1 where I changed the categories to three instances e.g. T2T, TgapT, noT2T, and so on
+## add to the script the contigs into individual files
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) == 0) {
@@ -43,15 +44,20 @@ df_final <- df_new %>%
     p > 50 ~ "p",
     q > 50 ~ "q",
     TRUE ~ "0"),
-    t2t = case_when(
-      telomere == "pq" & is.na(gapcount) ~ "T-2-T",
-      telomere == "pq" & !is.na(gapcount) ~ "T-gap-T",
-      telomere == "p" & is.na(gapcount) ~ "T-nogap-noT",
-      telomere == "p" & !is.na(gapcount) ~ "T-gap-noT",
-      telomere == "q" & is.na(gapcount) ~ "noT-nogap-T",
-      telomere == "q" & !is.na(gapcount) ~ "noT-gap-T",
-      is.na(telomere) & !is.na(gapcount) ~ "noT-nogap-noT",
-      TRUE ~ "noT-gap-noT")) %>%
+    completion = case_when(
+      telomere == "pq" & is.na(gapcount) ~ "T_2_T",
+      telomere == "pq" & !is.na(gapcount) ~ "T_gap_T",
+      telomere == "p" & is.na(gapcount) ~ "T_nogap_noT",
+      telomere == "p" & !is.na(gapcount) ~ "T_gap_noT",
+      telomere == "q" & is.na(gapcount) ~ "noT_nogap_T",
+      telomere == "q" & !is.na(gapcount) ~ "noT_gap_T",
+      is.na(telomere) & !is.na(gapcount) ~ "noT_nogap_noT",
+      TRUE ~ "noT_gap_noT"),
+      score = case_when(
+        telomere == "pq" ~ "2",
+        telomere == "p" | telomere == "q" ~ "1",
+        TRUE ~ "0"
+      )) %>%
   select(chr,
          completion = t2t,
          contig_name = query_name, 
