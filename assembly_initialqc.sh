@@ -1,13 +1,63 @@
 #!/bin/bash
 ## This is version 2.1
 ### changes: made map and path file optional so could run with hifiasm assembly as well
-### removed gapLength since it's redundant to seqtk coor file
-## by PSPineda 2024.03.13 (polenpineda@gmail.com)
+### changes: trying to add parameters... still commented as not yet tested
+## by PSPineda 2024.03.27 (polenpineda@gmail.com)
+
+# helpFunction()
+# {
+#    echo ""
+#    echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [--map <assembly.scfmap>] [--path <assembly.paths.tsv>] [--telom <telomere_count>] [-t <num_threads>]"
+#    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
+#    echo -e "\t-r reference genome"
+#    echo -e "\t-q query genome"
+#    echo -e "\t-o output directory"
+#    echo -e "\t--map assembly.scfmap output from verkko (optional)"
+#    echo -e "\t--path assembly.paths.tsv output from verkko (optional)"
+#    echo -e "\t--telom telomere count cutoff (default 50)"
+#    echo -e "\t-t threads (default 2)"
+#    exit 1 # Exit script after printing help
+# }
+
+# while getopts "r:q:o:map:path:telom:threads:" opt
+# do
+#    case "$opt" in
+#       r ) ref="$OPTARG" ;;
+#       q ) qry="$OPTARG" ;;
+#       o ) dirname="$OPTARG" ;;
+#       map ) map="$OPTARG" ;;
+#       path ) path="$OPTARG" ;;
+#       telom ) telom="$OPTARG" ;;
+#       threads ) threads="$OPTARG" ;;
+#       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+#    esac
+# done
+
+# # Print helpFunction in case parameters are empty
+# if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
+# then
+#    echo "Please input reference genome, query genome, and output name";
+#    helpFunction
+# fi
+
+# set -euo pipefail
+
+# echo -e "Reading input"
+# ref="$(realpath "$ref")"
+# qry="$(realpath "$qry")"
+# dirname="$(realpath "$dirname")"
+# map="${map:-"assembly.scfmap"}"
+# map="$(realpath "$map")"
+# path="${path:-"assembly.paths.tsv"}"
+# path="$(realpath "$path")"
+# telom="${telom:-50}"
+# threads="${threads:-2}"
+
+# mkdir -p "$dirname"
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <reference.fasta> <query.fasta> <output_dir> <assembly.scfmap> <assembly.paths.tsv>"
-    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics.
-Warning: Activate conda for tidk to count telomeres."
+    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
     exit 1
 fi
 

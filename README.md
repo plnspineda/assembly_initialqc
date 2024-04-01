@@ -17,6 +17,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
         git clone https://github.com/plnspineda/assembly_initialqc.git
         cd assembly_initialqc
+        chmod +x assembly_initialqc.sh
 
 2. Create a conda environment (Optional if you already have the tools specified in requirements):
 
@@ -40,13 +41,54 @@ wherein:
 - `assembly.scfmap` is an output from verkko along with `assembly.paths`. These are used to get the pathname and nodes for each chromosome/contig.
 - `4` is the number of threads
 
+## To run in local
+
+This is for haplotype 1
+
+        #!/bin/bash
+        conda activate initialqc
+        export QC="path/to/assembly_initialqc"
+        
+        ref="path/to/ref.fa"
+        qry=assembly.haplotype1.fasta
+        out=hap1
+
+        $QC/assembly_initialqc.sh $ref.fa $qry $out assembly.scfmap assembly.paths.tsv
+
+## To run in phoenix server
+
+Install `tidk`, edit the input files and run the following modules:
+
+        #!/bin/bash
+        #SBATCH -p a100cpu
+        #SBATCH -N 1
+        #SBATCH -n 24
+        #SBATCH --time=02:00:00
+        #SBATCH --mem=48GB
+
+        module purge
+        module use /apps/modules/all
+        module load R
+        module load SAMtools/1.17-GCC-11.2.0
+        module load minimap2/2.26-GCCcore-11.2.0
+        module load Java/17.0.6
+        module load seqtk/1.3-GCC-11.2.0
+
+        export QC="path/to/assembly_initialqc"
+
+        ref="/path/to/ref.fa"
+        qry=assembly.haplotype1.fasta
+        out=hap1
+
+        $QC/assembly_initialqc.sh $ref.fa $qry $out assembly.scfmap assembly.paths.tsv
+
 ## Expected output files
 
 The final output information that will tell status of chromosomes can be found in `all_STATS.tsv` (eg. if T2T, TgapT, etc.)
 
 The `all_STATS.tsv` will lool like this:
 
-...sample...
+![alt text](sample_all_STATs.png)
 
 Description of columns:
 
@@ -85,17 +127,6 @@ folders:
     - contig_list (contains lists of contigs, orientation and proportion with the reference genome)
     - combine (contains fasta file of each chromosomes)
 
-## To run in phoenix server
-
-You can just install `tidk` and run the following modules:
-
-        module purge
-        module use /apps/modules/all
-        module load R
-        module load SAMtools/1.17-GCC-11.2.0
-        module load minimap2/2.26-GCCcore-11.2.0
-        module load Java/17.0.6
-        module load seqtk/1.3-GCC-11.2.0
 
 This script also uses [CombineFasta](https://github.com/njdbickhart/CombineFasta) to reorient the contigs in the same orientation as the reference genome.
 

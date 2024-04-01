@@ -3,9 +3,7 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 
-## This is version 2.1 where I changed the categories to three instances e.g. T2T, TgapT, noT2T, and so on
-## add to the script the contigs into individual files
-## 
+## This is a version where I added another column score. 2024.03.27
 
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) == 0) {
@@ -67,9 +65,9 @@ df_final <- df_new %>%
       is.na(telomere) & !is.na(gapcount) ~ "noT_nogap_noT",
       TRUE ~ "noT_gap_noT"),
       score = case_when(
-        telomere == "pq" ~ "1",
-        telomere == "p" ~ "p0.5",
-        telomere == "q" ~ "q0.5",
+        telomere == "pq" ~ "2",
+        telomere == "p" ~ "1",
+        telomere == "q" ~ "1",
         TRUE ~ "0"
       )) %>%
   select(chr,
