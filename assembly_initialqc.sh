@@ -12,9 +12,9 @@ helpFunction()
    echo -e "\t-r reference genome"
    echo -e "\t-q query genome"
    echo -e "\t-o output directory"
-   echo -e "\t--map assembly.scfmap output from verkko (optional)"
-   echo -e "\t--path assembly.paths.tsv output from verkko (optional)"
-   echo -e "\t--telom telomere count cutoff (default 50)"
+   echo -e "\t-map assembly.scfmap output from verkko (optional)"
+   echo -e "\t-path assembly.paths.tsv output from verkko (optional)"
+   echo -e "\t-tel_cutoff telomere count cutoff (default 50)"
    echo -e "\t-t threads (default 2)"
    exit 1 # Exit script after printing help
 }
@@ -27,8 +27,8 @@ do
       o ) dirname="$OPTARG" ;;
       map ) map="$OPTARG" ;;
       path ) path="$OPTARG" ;;
-      telom ) telom="$OPTARG" ;;
-      threads ) threads="$OPTARG" ;;
+      tel_cutoff ) tel_cutoff="$OPTARG" ;;
+      t ) threads="$OPTARG" ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
