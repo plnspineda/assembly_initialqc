@@ -15,6 +15,7 @@ asm_path <- normalizePath(args[2])
 asm_map <- normalizePath(args[3])
 gap <- normalizePath(args[4])
 telom <- normalizePath(args[5])
+telom_cutoff <- args[6]
 
 setwd(dir)
 print(getwd())
@@ -51,10 +52,11 @@ df_new <-  merge(df_new, tlm, by = "chr", all.x = TRUE)
 
 df_final <- df_new %>%
   mutate(telomere = case_when(
-    p > 50 & q > 50 ~ "pq",
-    p > 50 ~ "p",
-    q > 50 ~ "q",
-    TRUE ~ "0"),
+    p > telom_cutoff & q > telom_cutoff ~ "pq",
+    p > telom_cutoff ~ "p",
+    q > telom_cutoff ~ "q",
+    TRUE ~ "0"
+    ),
     completion = case_when(
       telomere == "pq" & is.na(gapcount) ~ "T_2_T",
       telomere == "pq" & !is.na(gapcount) ~ "T_gap_T",
@@ -62,8 +64,9 @@ df_final <- df_new %>%
       telomere == "p" & !is.na(gapcount) ~ "T_gap_noT",
       telomere == "q" & is.na(gapcount) ~ "noT_nogap_T",
       telomere == "q" & !is.na(gapcount) ~ "noT_gap_T",
-      is.na(telomere) & !is.na(gapcount) ~ "noT_nogap_noT",
-      TRUE ~ "noT_gap_noT"),
+      telomere == "0" & !is.na(gapcount) ~ "noT_nogap_noT",
+      TRUE ~ "noT_gap_noT"
+      ),
       score = case_when(
         telomere == "pq" ~ "2",
         telomere == "p" ~ "1",

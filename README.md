@@ -48,7 +48,7 @@ This is for haplotype 1
         #!/bin/bash
         conda activate initialqc
         export QC="path/to/assembly_initialqc"
-        
+
         ref="path/to/ref.fa"
         qry=assembly.haplotype1.fasta
         out=hap1
@@ -86,14 +86,14 @@ Install `tidk`, edit the input files and run the following modules:
 
 The final output information that will tell status of chromosomes can be found in `all_STATS.tsv` (eg. if T2T, TgapT, etc.)
 
-The `all_STATS.tsv` will lool like this:
+The `all_STATS.tsv` will look like this:
 
 ![alt text](sample_all_STATs.png)
 
 Description of columns:
 
 - `chr` - chromosome
-- `completion` - status of the chromosome (T mean telomere, noT means no telomere). There are 8 scenarios where you can have either T (with telomere) or noT (no telomere) at p-arm, with gap or no gap, and T or noT at q-arm. `T2T` indicates complete chromosome (telomere-to-telomere). For example, `noT_gap_T` means there is no telomere at p-arm, there is gap within the sequence and there is telomere at q-arm.
+- `completion` - status of the chromosome (T means with telomere, noT means no telomere). There are 8 scenarios where you can either have T (with telomere) or noT (no telomere) at p-arm, with gap or no gap, and T or noT at q-arm. `T2T` indicates complete chromosome (telomere-to-telomere). For example, `noT_gap_T` means there is no telomere at p-arm, there is gap within the sequence and there is telomere at q-arm.
 - `score` - *to be implemented*
 - `contig_name` - the contig comprising of that chromosome
 - `contig` - number of contig aligning to that chromosome
