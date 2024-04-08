@@ -4,20 +4,20 @@
 ### changes: trying to add parameters... still commented as not yet tested
 ## by PSPineda 2024.03.27 (polenpineda@gmail.com)
 
-# helpFunction()
-# {
-#    echo ""
-#    echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [-map <assembly.scfmap>] [-path <assembly.paths.tsv>] [-tel_cutoff <telomere_count>] [-t <num_threads>]"
-#    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
-#    echo -e "\t-r reference genome"
-#    echo -e "\t-q query genome"
-#    echo -e "\t-o output directory"
-#    echo -e "\t-map assembly.scfmap output from verkko (optional)"
-#    echo -e "\t-path assembly.paths.tsv output from verkko (optional)"
-#    echo -e "\t-tel_cutoff telomere count cutoff (default 50)"
-#    echo -e "\t-t threads (default 2)"
-#    exit 1 # Exit script after printing help
-# }
+helpFunction()
+{
+   echo ""
+   echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [-map <assembly.scfmap>] [-path <assembly.paths.tsv>] [-tel_cutoff <telomere_count>] [-t <num_threads>]"
+   echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
+   echo -e "\t-r reference genome"
+   echo -e "\t-q query genome"
+   echo -e "\t-o output directory"
+   echo -e "\t-map assembly.scfmap output from verkko (optional)"
+   echo -e "\t-path assembly.paths.tsv output from verkko (optional)"
+   echo -e "\t-tel_cutoff telomere count cutoff (default 50)"
+   echo -e "\t-t threads (default 2)"
+   exit 1 # Exit script after printing help
+}
 
 while getopts "r:q:o:map:path:tel_cutoff:t:" opt
 do
@@ -60,7 +60,7 @@ map="$(realpath "$map")"
 path="${path:-"0"}"
 path="$(realpath "$path")"
 tel_cutoff="${tel_cutoff:-50}"
-threads="${t:-2}"
+t="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
 
 # if [ $# -eq 0 ]; then
