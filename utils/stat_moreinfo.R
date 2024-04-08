@@ -17,7 +17,7 @@ gap <- normalizePath(args[4])
 telom <- normalizePath(args[5])
 telom_cutoff <- args[6]
 
-t_cut <- telom_cutoff
+t_cut <- as.numeric(telom_cutoff)
 print(t_cut)
 
 setwd(dir)
