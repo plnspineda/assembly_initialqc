@@ -199,6 +199,9 @@ fi
 
 echo -e "Running stat_moreinfo.R..."
 
+echo "path file: $path"
+echo "map file: $map"
+
 if [ "$path" = "0" ] && [ "$map" = "0" ]; then
   echo -e "No nodes path and map input, will not add nodes pathway to the all_STATS.tsv file."
   Rscript "$QC"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
