@@ -31,15 +31,15 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
 ## Usage
 
-    $QC/assembly_initialqc.sh -r <ref.fa> -q <asm.fa> -o <dir_out> -map [assembly.scfmap] -path [assembly.paths.tsv] -threads 4
+    $QC/assembly_initialqc.sh -r <ref.fa> -q <asm.fa> -o <dir_out> -m [assembly.scfmap] -p [assembly.paths.tsv] -t 4
 
-        -r              reference genome
-        -q              query genome
-        -o              output directory
-        -map            assembly.scfmap output from verkko (optional)
-        -path           assembly.paths.tsv output from verkko (optional)
-        -tel_cutoff     telomere count cutoff (count of "TTAGGG") (default 50)
-        -t              threads (default 2)
+        -r      reference genome
+        -q      query genome
+        -o      output directory
+        -m      assembly.scfmap output from verkko (optional)
+        -p      assembly.paths.tsv output from verkko (optional)
+        -c      telomere count cutoff (count of "TTAGGG"). (default 50) ie. if telomere count is less than 50, then it will not accept the telomere presence of that chromosome.
+        -t      threads (default 2)
 
 wherein:
 

@@ -4,6 +4,8 @@
 ### changes: trying to add parameters... still commented as not yet tested
 ## by PSPineda 2024.03.27 (polenpineda@gmail.com)
 
+set -euo pipefail
+
 helpFunction()
 {
    echo ""
@@ -19,7 +21,7 @@ helpFunction()
    exit 1 # Exit script after printing help
 }
 
-while getopts "r:q:o:map:path:tel_cutoff:t:" opt
+while getopts "r:q:o:m:p:c:t:" opt
 do
    case "$opt" in
       r ) ref="$OPTARG" ;;
@@ -47,9 +49,6 @@ then
    echo "Please input output name"
    helpFunction
 fi
-
-
-set -euo pipefail
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
@@ -93,7 +92,7 @@ echo -e "Output directory: $dir"
 echo -e "Input map file: $(basename "$map")"
 echo -e "Input path file: $(basename "$path")"
 echo -e "Telomere count cutoff: "$tel_cutoff""
-echo -e "Number of threads: "$t""
+echo -e "Number of threads: "$threads""
 
 echo -e "Mapping query genome to reference genome"
 
