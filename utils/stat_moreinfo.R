@@ -17,6 +17,9 @@ gap <- normalizePath(args[4])
 telom <- normalizePath(args[5])
 telom_cutoff <- args[6]
 
+t_cut <- telom_cutoff
+print(t_cut)
+
 setwd(dir)
 print(getwd())
 
@@ -52,9 +55,9 @@ df_new <-  merge(df_new, tlm, by = "chr", all.x = TRUE)
 
 df_final <- df_new %>%
   mutate(telomere = case_when(
-    p > telom_cutoff & q > telom_cutoff ~ "pq",
-    p > telom_cutoff ~ "p",
-    q > telom_cutoff ~ "q",
+    p > t_cut & q > t_cut ~ "pq",
+    p > t_cut ~ "p",
+    q > t_cut ~ "q",
     TRUE ~ "0"
     ),
     completion = case_when(

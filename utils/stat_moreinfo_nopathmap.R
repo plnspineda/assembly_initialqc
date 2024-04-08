@@ -13,6 +13,8 @@ gap <- normalizePath(args[2])
 telom <- normalizePath(args[3])
 telom_cutoff <- args[4]
 
+print(telom_cutoff)
+
 setwd(dir)
 print(getwd())
 
