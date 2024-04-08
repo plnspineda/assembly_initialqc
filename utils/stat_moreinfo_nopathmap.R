@@ -78,4 +78,4 @@ df_final <- df_new %>%
 
 df_final[is.na(df_final)] <- 0
 
-write_tsv(df_final, file = paste0(dir,"/",dir,"_all_STATS.tsv"))
+write_tsv(df_final, file = paste0(dir,"_all_STATS.tsv"))

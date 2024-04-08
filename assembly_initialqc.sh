@@ -89,6 +89,11 @@ fi
 echo -e "Reference genome: $(basename "$ref")"
 echo -e "Query genome: $(basename "$qry")"
 echo -e "Output fasta: $(basename "$outname")"
+echo -e "Output directory: $dir"
+echo -e "Input map file: $(basename "$map")"
+echo -e "Input path file: $(basename "$path")"
+echo -e "Telomere count cutoff: "$tel_cutoff""
+echo -e "Number of threads: "$t""
 
 echo -e "Mapping query genome to reference genome"
 
