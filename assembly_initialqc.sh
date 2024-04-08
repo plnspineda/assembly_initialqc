@@ -56,9 +56,7 @@ ref="$(realpath "$ref")"
 qry="$(realpath "$qry")"
 dirname="$(realpath "$dirname")"
 map="${map:-"0"}"
-map="$(realpath "$map")"
 path="${path:-"0"}"
-path="$(realpath "$path")"
 tel_cutoff="${tel_cutoff:-50}"
 t="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
@@ -189,6 +187,11 @@ if [ "$y_size" -gt 4096 ]; then
 	seqtk cutN -n 3 -g "$dir"/combine/Y.fasta > "$dir"/Y.coor
 else
 	echo -e "No telomeres found for X"
+fi
+
+if [ "$map" != "0" ] && [ "$path" != "0" ]; then
+    map="$(realpath "$map")"
+    path="$(realpath "$path")"
 fi
 
 echo -e "Running stat_moreinfo.R..."

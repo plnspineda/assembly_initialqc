@@ -31,15 +31,15 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
 ## Usage
 
-    $QC/assembly_initialqc.sh -r <ref.fa> -q <qry.fa> -o <dir_out> -map [assembly.scfmap] -path [assembly.paths.tsv] -threads 4
+    $QC/assembly_initialqc.sh -r <ref.fa> -q <asm.fa> -o <dir_out> -map [assembly.scfmap] -path [assembly.paths.tsv] -threads 4
 
-        -r reference genome
-        -q query genome
-        -o output directory
-        -map assembly.scfmap output from verkko (optional)
-        -path assembly.paths.tsv output from verkko (optional)
-        -tel_cutoff telomere count cutoff (default 50)
-        -t threads (default 2)
+        -r              reference genome
+        -q              query genome
+        -o              output directory
+        -map            assembly.scfmap output from verkko (optional)
+        -path           assembly.paths.tsv output from verkko (optional)
+        -tel_cutoff     telomere count cutoff (count of "TTAGGG") (default 50)
+        -t              threads (default 2)
 
 wherein:
 
@@ -47,7 +47,6 @@ wherein:
 - `asm.fa` is the draft contig assembly
 - `outdir` is the output directory (will make one if the folder do not exists)
 - `assembly.scfmap` is an output from verkko along with `assembly.paths`. These are used to get the pathname and nodes for each chromosome/contig.
-- `4` is the number of threads
 
 ## To run in local
 
