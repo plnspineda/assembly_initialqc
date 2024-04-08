@@ -7,14 +7,14 @@
 helpFunction()
 {
    echo ""
-   echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [-map <assembly.scfmap>] [-path <assembly.paths.tsv>] [-tel_cutoff <telomere_count>] [-t <num_threads>]"
+   echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [-m <assembly.scfmap>] [-p <assembly.paths.tsv>] [-c <telomere_count>] [-t <num_threads>]"
    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
    echo -e "\t-r reference genome"
    echo -e "\t-q query genome"
    echo -e "\t-o output directory"
-   echo -e "\t-map assembly.scfmap output from verkko (optional)"
-   echo -e "\t-path assembly.paths.tsv output from verkko (optional)"
-   echo -e "\t-tel_cutoff telomere count cutoff (default 50)"
+   echo -e "\t-m assembly.scfmap output from verkko (optional)"
+   echo -e "\t-p assembly.paths.tsv output from verkko (optional)"
+   echo -e "\t-c telomere count cutoff (default 50)"
    echo -e "\t-t threads (default 2)"
    exit 1 # Exit script after printing help
 }
@@ -25,9 +25,9 @@ do
       r ) ref="$OPTARG" ;;
       q ) qry="$OPTARG" ;;
       o ) dirname="$OPTARG" ;;
-      map ) map="$OPTARG" ;;
-      path ) path="$OPTARG" ;;
-      tel_cutoff ) tel_cutoff="$OPTARG" ;;
+      m ) map="$OPTARG" ;;
+      p ) path="$OPTARG" ;;
+      c ) tel_cutoff="$OPTARG" ;;
       t ) threads="$OPTARG" ;;
       # ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
@@ -58,7 +58,7 @@ dirname="$(realpath "$dirname")"
 map="${map:-"0"}"
 path="${path:-"0"}"
 tel_cutoff="${tel_cutoff:-50}"
-t="${t:-2}"
+threads="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
 
 # if [ $# -eq 0 ]; then
@@ -98,7 +98,7 @@ echo -e "Number of threads: "$t""
 echo -e "Mapping query genome to reference genome"
 
 if [ ! -f "$dir/minimap.paf" ]; then
-    minimap2 "$ref" "$qry" -t "$t" -x asm5 -o "$dir/minimap.paf"
+    minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
 fi
 mkdir -p "$dir"/contig_list
 mkdir -p "$dir"/archived
