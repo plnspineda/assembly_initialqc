@@ -19,59 +19,58 @@
 #    exit 1 # Exit script after printing help
 # }
 
-# while getopts "r:q:o:map:path:tel_cutoff:t:" opt
-# do
-#    case "$opt" in
-#       r ) ref="$OPTARG" ;;
-#       q ) qry="$OPTARG" ;;
-#       o ) dirname="$OPTARG" ;;
-#       map ) map="$OPTARG" ;;
-#       path ) path="$OPTARG" ;;
-#       tel_cutoff ) tel_cutoff="$OPTARG" ;;
-#       t ) threads="$OPTARG" ;;
-#       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
-#    esac
-# done
+while getopts "r:q:o:map:path:tel_cutoff:t:" opt
+do
+   case "$opt" in
+      r ) ref="$OPTARG" ;;
+      q ) qry="$OPTARG" ;;
+      o ) dirname="$OPTARG" ;;
+      map ) map="$OPTARG" ;;
+      path ) path="$OPTARG" ;;
+      tel_cutoff ) tel_cutoff="$OPTARG" ;;
+      t ) threads="$OPTARG" ;;
+      # ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+   esac
+done
 
-# # Print helpFunction in case parameters are empty
-# if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
-# then
-#    echo "Please input reference genome, query genome, and output name";
-#    helpFunction
-# fi
-
-# set -euo pipefail
-
-# echo -e "Reading input"
-# ref="$(realpath "$ref")"
-# qry="$(realpath "$qry")"
-# dirname="$(realpath "$dirname")"
-# map="${map:-"0"}"
-# map="$(realpath "$map")"
-# path="${path:-"0"}"
-# path="$(realpath "$path")"
-# tel_cutoff="${tel_cutoff:-50}"
-# threads="${threads:-2}"
-
-# mkdir -p "$dirname"
-
-if [ $# -eq 0 ]; then
-    echo "Usage: $0 <reference.fasta> <query.fasta> <output_dir> <assembly.scfmap> <assembly.paths.tsv>"
-    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
-    exit 1
+# Print helpFunction in case parameters are empty
+if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
+then
+   echo "Please input reference genome, query genome, and output name";
+   helpFunction
 fi
 
 set -euo pipefail
 
 echo -e "Reading input"
-ref="$(realpath $1)"
-qry="$(realpath $2)"
-outname="$(basename "$2" .fa*)_tmp_asm.fasta"
-dirname="$3"
-map="$(realpath "${4:-0}")"
-path="$(realpath "${5:-0}")"
-t="${6:-2}"
-tel_cutoff="${7:-50}"
+ref="$(realpath "$ref")"
+qry="$(realpath "$qry")"
+dirname="$(realpath "$dirname")"
+map="${map:-"0"}"
+map="$(realpath "$map")"
+path="${path:-"0"}"
+path="$(realpath "$path")"
+tel_cutoff="${tel_cutoff:-50}"
+threads="${threads:-2}"
+outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
+
+# if [ $# -eq 0 ]; then
+#     echo "Usage: $0 <reference.fasta> <query.fasta> <output_dir> <assembly.scfmap> <assembly.paths.tsv>"
+#     echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
+#     exit 1
+# fi
+
+# set -euo pipefail
+
+# echo -e "Reading input"
+# ref="$(realpath $1)"
+# qry="$(realpath $2)"
+# outname="$(basename "$2" .fa*)_tmp_asm.fasta"
+# dirname="$3"
+# map="$(realpath "${4:-0}")"
+# path="$(realpath "${5:-0}")"
+# t="${6:-2}"
+# tel_cutoff="${7:-50}"
 
 mkdir -p "$dirname"
 dir=$(realpath $dirname)
