@@ -34,11 +34,20 @@ do
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
+if [ -z "$ref" ]
 then
-   echo "Please input reference genome, query genome, and output name";
+   echo "Please input reference genome"
+   helpFunction
+elif [ -z "$qry" ]
+then
+   echo "Please input query genome"
+   helpFunction
+elif [ -z "$dirname" ]
+then
+   echo "Please input output name"
    helpFunction
 fi
+
 
 set -euo pipefail
 
@@ -51,7 +60,7 @@ map="$(realpath "$map")"
 path="${path:-"0"}"
 path="$(realpath "$path")"
 tel_cutoff="${tel_cutoff:-50}"
-threads="${threads:-2}"
+threads="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
 
 # if [ $# -eq 0 ]; then
