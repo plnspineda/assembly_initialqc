@@ -33,13 +33,13 @@ Script for checking homologous chromosomes with a reference genome and checking 
 
     $QC/assembly_initialqc.sh -r <ref.fa> -q <qry.fa> -o <dir_out> -map [assembly.scfmap] -path [assembly.paths.tsv] -threads 4
 
-        -r reference genome"
-        -q query genome"
-        -o output directory"
-        -map assembly.scfmap output from verkko (optional)"
-        -path assembly.paths.tsv output from verkko (optional)"
-        -tel_cutoff telomere count cutoff (default 50)"
-        -t threads (default 2)"
+        -r reference genome
+        -q query genome
+        -o output directory
+        -map assembly.scfmap output from verkko (optional)
+        -path assembly.paths.tsv output from verkko (optional)
+        -tel_cutoff telomere count cutoff (default 50)
+        -t threads (default 2)
 
 wherein:
 
