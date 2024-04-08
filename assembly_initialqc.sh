@@ -159,7 +159,6 @@ else
     fi
 fi
 
-rm ./contig_*
 cd ../
 
 echo -e "Running seqtk to get gap coordinates..."
