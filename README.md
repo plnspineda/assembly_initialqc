@@ -68,32 +68,31 @@ This is for haplotype 1
 
 Install `tidk`, edit the input files and run the following modules:
 
-(base) [a1812753@p2-log-1 Verkko2_run6]$ cat control_assemblyqc_hap1.sh 
-#!/bin/bash
-#SBATCH -p a100cpu
-#SBATCH -N 1
-#SBATCH -n 32
-#SBATCH --time=02:00:00
-#SBATCH --mem=64GB
+        #!/bin/bash
+        #SBATCH -p a100cpu
+        #SBATCH -N 1
+        #SBATCH -n 32
+        #SBATCH --time=02:00:00
+        #SBATCH --mem=64GB
 
-module purge
-module use /apps/modules/all
-module load R
-module load SAMtools/1.17-GCC-11.2.0
-module load minimap2/2.26-GCCcore-11.2.0
-module load Java/17.0.6
-module load seqtk/1.3-GCC-11.2.0
-#conda activate centromere
+        module purge
+        module use /apps/modules/all
+        module load R
+        module load SAMtools/1.17-GCC-11.2.0
+        module load minimap2/2.26-GCCcore-11.2.0
+        module load Java/17.0.6
+        module load seqtk/1.3-GCC-11.2.0
+        #conda activate centromere
 
-export QC="/hpcfs/users/a1812753/Tuli_x_Wagyu/scripts/assembly_initialqc"
+        export QC="/hpcfs/users/a1812753/Tuli_x_Wagyu/scripts/assembly_initialqc"
 
-ref="/hpcfs/users/a1812753/reference_assemblies/ARS-UCD2.0_frozen.fna"
-qry="assembly.haplotype1.fasta"
-dir="hap1"
-map="assembly.scfmap"
-path="assembly.paths.tsv"
+        ref="/hpcfs/users/a1812753/reference_assemblies/ARS-UCD2.0_frozen.fna"
+        qry="assembly.haplotype1.fasta"
+        dir="hap1"
+        map="assembly.scfmap"
+        path="assembly.paths.tsv"
 
-"$QC"/assembly_initialqc.sh -r "$ref" -q "$qry" -o "$dir" -m "$map" -p "$path" -t "32"
+        "$QC"/assembly_initialqc.sh -r "$ref" -q "$qry" -o "$dir" -m "$map" -p "$path" -t "32"
 
 ## Expected output files
 
