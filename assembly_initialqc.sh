@@ -53,7 +53,6 @@ done
 echo -e "Reading input"
 ref="$(realpath "$ref")"
 qry="$(realpath "$qry")"
-dirname="$(realpath "$dirname")"
 map="${map:-"0"}"
 path="${path:-"0"}"
 tel_cutoff="${tel_cutoff:-50}"
