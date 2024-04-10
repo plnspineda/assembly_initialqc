@@ -40,7 +40,12 @@ do
    esac
 done
 
-
+# Print helpFunction in case parameters are empty
+if [ -z "$qry" ] || [ -z "$ref" ] || [ -z "$dirname" ]
+then
+   echo "Please input reference fasta, query fasta and output directory name.";
+   helpFunction
+fi
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
