@@ -20,12 +20,27 @@ helpFunction()
    exit 1 # Exit script after printing help
 }
 
-# Print helpFunction in case parameters are empty
-if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
+if [ "$#" -eq 0 ]
 then
-   echo "Needs reference fasta file, query fasta file and output directory name";
-   helpFunction
+    helpFunction
+    exit 1
 fi
+
+while getopts "r:q:o:m:p:c:t:" opt
+do
+   case "$opt" in
+      r ) ref="$OPTARG" ;;
+      q ) qry="$OPTARG" ;;
+      o ) dirname="$OPTARG" ;;
+      m ) map="$OPTARG" ;;
+      p ) path="$OPTARG" ;;
+      c ) tel_cutoff="$OPTARG" ;;
+      t ) t="$OPTARG" ;;
+      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+   esac
+done
+
+
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
