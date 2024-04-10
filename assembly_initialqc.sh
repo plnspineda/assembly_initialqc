@@ -24,7 +24,7 @@ while getopts "r:q:o:m:p:c:t:" opt
 do
    case "$opt" in
       r ) if [ -z "$OPTARG" ] ; then
-      echo "Error: -p requires an argument"
+      echo "Error: -r requires an argument"
       exit 1
       fi
       ref="$OPTARG" ;;
@@ -33,11 +33,7 @@ do
       exit 1
       fi
       qry="$OPTARG" ;;
-      o ) if [ -z "$OPTARG" ] ; then
-      echo "Error: -o requires an argument"
-      exit 1
-      fi
-      dirname="$OPTARG" ;;
+      o ) dirname="$OPTARG" ;;
       m ) map="$OPTARG" ;;
       p ) path="$OPTARG" ;;
       c ) tel_cutoff="$OPTARG" ;;
@@ -46,8 +42,8 @@ do
    esac
 done
 
-if [ ! $# -eq 3 ] ; then
-    echo "Expected -r, -q, and -o arguments"
+if [ ! $# -gt 3 ] ; then
+    helpFunction
     exit 1
 fi
 
