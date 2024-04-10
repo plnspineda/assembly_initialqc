@@ -20,18 +20,24 @@ helpFunction()
    exit 1 # Exit script after printing help
 }
 
-if [ ! "$#" -eq 3 ]
-then
-    helpFunction
-    exit 1
-fi
-
 while getopts "r:q:o:m:p:c:t:" opt
 do
    case "$opt" in
-      r ) ref="$OPTARG" ;;
-      q ) qry="$OPTARG" ;;
-      o ) dirname="$OPTARG" ;;
+      r ) if [ -z "$OPTARG" ] ; then
+      echo "Error: -p requires an argument"
+      exit 1
+      fi
+      ref="$OPTARG" ;;
+      q ) if [ -z "$OPTARG" ] ; then
+      echo "Error: -q requires an argument"
+      exit 1
+      fi
+      qry="$OPTARG" ;;
+      o ) if [ -z "$OPTARG" ] ; then
+      echo "Error: -o requires an argument"
+      exit 1
+      fi
+      dirname="$OPTARG" ;;
       m ) map="$OPTARG" ;;
       p ) path="$OPTARG" ;;
       c ) tel_cutoff="$OPTARG" ;;
@@ -39,6 +45,11 @@ do
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
+
+if [ ! $# -eq 3 ] ; then
+    echo "Expected -r, -q, and -o arguments"
+    exit 1
+fi
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
