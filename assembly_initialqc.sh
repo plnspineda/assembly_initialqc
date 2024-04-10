@@ -23,6 +23,7 @@ helpFunction()
 
 while getopts "r:q:o:m:p:c:t:" opt
 do
+  echo "Option $opt with value $OPTARG"
    case "$opt" in
       r ) ref="$OPTARG" ;;
       q ) qry="$OPTARG" ;;
@@ -36,17 +37,9 @@ do
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$ref" ]
+if [ -z "$ref" ] || [ -z "$qry" ] || [ -z "$dirname" ]
 then
-   echo "Please input reference genome"
-   helpFunction
-elif [ -z "$qry" ]
-then
-   echo "Please input query genome"
-   helpFunction
-elif [ -z "$dirname" ]
-then
-   echo "Please input output name"
+   echo "Needs reference fasta file, query fasta file and output directory name";
    helpFunction
 fi
 
