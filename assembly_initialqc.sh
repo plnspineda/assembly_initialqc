@@ -35,20 +35,20 @@ do
    esac
 done
 
-# # Print helpFunction in case parameters are empty
-# if [ -z "$ref" ]
-# then
-#    echo "Please input reference genome"
-#    helpFunction
-# elif [ -z "$qry" ]
-# then
-#    echo "Please input query genome"
-#    helpFunction
-# elif [ -z "$dirname" ]
-# then
-#    echo "Please input output name"
-#    helpFunction
-# fi
+# Print helpFunction in case parameters are empty
+if [ -z "$ref" ]
+then
+   echo "Please input reference genome"
+   helpFunction
+elif [ -z "$qry" ]
+then
+   echo "Please input query genome"
+   helpFunction
+elif [ -z "$dirname" ]
+then
+   echo "Please input output name"
+   helpFunction
+fi
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
