@@ -8,7 +8,6 @@ set -euo pipefail
 
 helpFunction()
 {
-   echo ""
    echo "Usage: $0 -r <ref.fa> -q <qry.fa> -o <output_directory> [-m <assembly.scfmap>] [-p <assembly.paths.tsv>] [-c <telomere_count>] [-t <num_threads>]"
    echo "Description: To initially find the contigs equivalent to a chromosome, count telomeres and output a summary statistics."
    echo -e "\t-r reference genome"
@@ -23,7 +22,6 @@ helpFunction()
 
 while getopts "r:q:o:m:p:c:t:" opt
 do
-  echo "Option $opt with value $OPTARG"
    case "$opt" in
       r ) ref="$OPTARG" ;;
       q ) qry="$OPTARG" ;;
@@ -31,7 +29,7 @@ do
       m ) map="$OPTARG" ;;
       p ) path="$OPTARG" ;;
       c ) tel_cutoff="$OPTARG" ;;
-      t ) threads="$OPTARG" ;;
+      t ) t="$OPTARG" ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
