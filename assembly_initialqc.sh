@@ -57,6 +57,7 @@ threads="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
 
 QC_dir=$(dirname $0)
+QC_dir=$(realpath $QC_dir)
 
 # if [ $# -eq 0 ]; then
 #     echo "Usage: $0 <reference.fasta> <query.fasta> <output_dir> <assembly.scfmap> <assembly.paths.tsv>"
