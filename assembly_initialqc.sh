@@ -31,24 +31,24 @@ do
       p ) path="$OPTARG" ;;
       c ) tel_cutoff="$OPTARG" ;;
       t ) threads="$OPTARG" ;;
-      # ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
 
-# Print helpFunction in case parameters are empty
-if [ -z "$ref" ]
-then
-   echo "Please input reference genome"
-   helpFunction
-elif [ -z "$qry" ]
-then
-   echo "Please input query genome"
-   helpFunction
-elif [ -z "$dirname" ]
-then
-   echo "Please input output name"
-   helpFunction
-fi
+# # Print helpFunction in case parameters are empty
+# if [ -z "$ref" ]
+# then
+#    echo "Please input reference genome"
+#    helpFunction
+# elif [ -z "$qry" ]
+# then
+#    echo "Please input query genome"
+#    helpFunction
+# elif [ -z "$dirname" ]
+# then
+#    echo "Please input output name"
+#    helpFunction
+# fi
 
 echo -e "Reading input"
 ref="$(realpath "$ref")"
@@ -59,6 +59,8 @@ path="${path:-"0"}"
 tel_cutoff="${tel_cutoff:-50}"
 threads="${t:-2}"
 outname="$(basename "$qry" .fa*)_tmp_asm.fasta"
+
+QC_dir=$(dirname $0)
 
 # if [ $# -eq 0 ]; then
 #     echo "Usage: $0 <reference.fasta> <query.fasta> <output_dir> <assembly.scfmap> <assembly.paths.tsv>"
@@ -106,7 +108,7 @@ echo -e "Running Rscript to get homologous chromosomes and Computing assembly an
 # Rscript findContigs.R "$ref" "$qry"
 
 Rscript --version
-Rscript "$QC"/utils/stat_initialqc.R "$dir"
+Rscript "$QC_dir"/utils/stat_initialqc.R "$dir"
 
 echo -e "Making combine folder and getting the contigs"
 mkdir -p "$dir"/combine
@@ -128,7 +130,7 @@ for k in *_order.list; do
   fasta_file="$kbase.fasta"
   if [ ! -f "$fasta_file" ]; then
     echo -e "Combining contigs for chromosome $kbase with $k as the order list."
-    java -jar "$QC"/tools/CombineFasta/store/CombineFasta.jar order \
+    java -jar "$QC_dir"/tools/CombineFasta/store/CombineFasta.jar order \
       -i "$kbase"_order.list \
       -o "$fasta_file" \
       -p 100 \
@@ -203,10 +205,10 @@ echo "map file: $map"
 
 if [ "$path" = "0" ] && [ "$map" = "0" ]; then
   echo -e "No nodes path and map input, will not add nodes pathway to the all_STATS.tsv file."
-  Rscript "$QC"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
+  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
 else
   echo -e "Nodes path and map provided, will add pathway to the all_STATS.tsv file."
-  Rscript "$QC"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
+  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
 fi
 
 echo "Done. :)"
