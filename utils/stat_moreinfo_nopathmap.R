@@ -53,7 +53,7 @@ df_final <- df_new %>%
       telomere == "p" & !is.na(gapcount) ~ "T_gap_noT",
       telomere == "q" & is.na(gapcount) ~ "noT_nogap_T",
       telomere == "q" & !is.na(gapcount) ~ "noT_gap_T",
-      telomere == "0" & !is.na(gapcount) ~ "noT_nogap_noT",
+      telomere == "0" & is.na(gapcount) ~ "noT_nogap_noT",
       TRUE ~ "noT_gap_noT"
       ),
       score = case_when(
