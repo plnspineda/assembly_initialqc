@@ -205,10 +205,10 @@ echo "map file: $map"
 
 if [ "$path" = "0" ] && [ "$map" = "0" ]; then
   echo -e "No nodes path and map input, will not add nodes pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
+  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 else
   echo -e "Nodes path and map provided, will add pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff"
+  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 fi
 
 echo "Done. :)"
