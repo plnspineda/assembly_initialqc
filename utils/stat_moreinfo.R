@@ -16,6 +16,7 @@ asm_map <- normalizePath(args[3])
 gap <- normalizePath(args[4])
 telom <- normalizePath(args[5])
 telom_cutoff <- args[6]
+telom_length <- normalizePath(args[7])
 
 t_cut <- as.numeric(telom_cutoff)
 print(t_cut)
@@ -29,6 +30,7 @@ coor <- read_delim(gap, col_names = c("chr","gapstart","gapend"))
 path <- read_delim(asm_path)
 map <- read_csv(asm_map, col_names = c("col1"))
 telomere <- read_delim(telom, col_names = c("chr","start","end","value"))
+telomere_length <- read_delim(telom_length, col_names = c("chr","start","end"))
 
 ## for gaps
 coor <- coor %>% mutate(gaplen = gapend - gapstart +1) %>%
@@ -46,18 +48,36 @@ tlm <- telomere %>%
   summarise(p = sum(value[1:2]),
             q = sum(value[(n() - 1):n()]))
 
+## for telomere length with telomere_analysis.sh
+tlm_len <- telomere_length %>%
+  mutate(p = ifelse(start < 1, end - start, NA),
+         q = ifelse(start > 0, end - start, NA),
+         p_start = ifelse(start < 1, Start, NA),
+         p_end = ifelse(start < 1, end, NA),
+         q_start = ifelse(start > 0, start, NA),
+         q_end = ifelse(start > 0, end, NA)) %>%
+  group_by(Chromosome) %>%
+  summarise(p_length = sum(p, na.rm = TRUE),
+            q_length = sum(q, na.rm = TRUE),
+            p_start = first(p_start[!is.na(p_start)]),
+            p_end = first(p_end[!is.na(p_end)]),
+            q_start = first(q_start[!is.na(q_start)]),
+            q_end = first(q_end[!is.na(q_end)])) %>%
+  ungroup()
+
 key <- merge(path, map, by = "name")
 df_new <- merge(df, coor, by = "chr", all.x = TRUE)
 df_new <- merge(df_new, key, by = "query_name", all.x = TRUE)
 df_new <-  merge(df_new, tlm, by = "chr", all.x = TRUE)
+df_new <- merge(df_new, tlm_len, by = "chr", all.x = TRUE)
 
 # creating the table
 
 df_final <- df_new %>%
   mutate(telomere = case_when(
-    p > t_cut & q > t_cut ~ "pq",
-    p > t_cut ~ "p",
-    q > t_cut ~ "q",
+    !is.na(p_len) & !is.na(q_len) ~ "pq",
+    !is.na(p_len) ~ "p",
+    !is.na(q_len) ~ "q",
     TRUE ~ "0"
     ),
     completion = case_when(

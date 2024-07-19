@@ -142,4 +142,16 @@ folders:
 
 This script also uses [CombineFasta](https://github.com/njdbickhart/CombineFasta) to reorient the contigs in the same orientation as the reference genome.
 
-...still under development...
+# Revisions
+
+### Version 2.2 (July 18, 2024)
+changes:
+- changed the telomere analysis to include telomere_analysis.sh from [vgp-pipeline](https://github.com/VGP/vgp-assembly). Basically, in 1k window, will look for occurence of "TTAGGG" and if the window contains 50% of this repeat, then it will count as telomere length. (on-going)
+- because of this, additional column in the *stat.txt for telomere length.
+- T2T chromosome standard will also change based on the telomere_analysis.sh result
+
+### Version 2.1 (March 27, 2024)
+
+changes:
+- made map and path file optional so could run with hifiasm assembly as well
+- trying to add parameters... still commented as not yet tested

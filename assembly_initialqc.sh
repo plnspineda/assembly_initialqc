@@ -162,15 +162,18 @@ cd ../
 echo -e "Running seqtk to get gap coordinates..."
 seqtk cutN -n 3 -g "$outname" > $(basename "$outname" .fasta).coor
 
+echo -e "Running telomere_analysis.sh" to estimate telomere length
+
+telomerebase=$(basename "$outname" .fasta)
+"$QC_dir"/tools/telomere/telomere_analysis.sh telomere_"$telomerebase" 50 1000 "$dir"/"$outname"
+
 echo -e "Running tidk to count telomeres."
 # installed on conda activate centromere
 
-tidkbase=$(basename "$outname" .fasta)
-
-tidk search -s TTAGGG -o "$tidkbase"_bedgraph_tidk-search --dir "$dir" -e bedgraph "$dir"/"$outname" -w 10000
-tidk search -s TTAGGG -o "$tidkbase"_tsv_tidk-search --dir "$dir" -e tsv "$dir"/"$outname" -w 10000
+tidk search -s TTAGGG -o "$telomerebase"_bedgraph_tidk-search --dir "$dir" -e bedgraph "$dir"/"$outname" -w 10000
+tidk search -s TTAGGG -o "$telomerebase"_tsv_tidk-search --dir "$dir" -e tsv "$dir"/"$outname" -w 10000
 echo -e "Generating plot..."
-tidk plot -o "$tidkbase"_tidk-plot -t "$dir"/"$tidkbase"_tsv_tidk-search_telomeric_repeat_windows.tsv
+tidk plot -o "$telomerebase"_tidk-plot -t "$dir"/"$telomerebase"_tsv_tidk-search_telomeric_repeat_windows.tsv
 
 echo -e "Generating count for sex chromosomes."
 tidk search -s TTAGGG -o X_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/X.fasta -w 10000
