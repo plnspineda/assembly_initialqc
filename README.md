@@ -141,7 +141,9 @@ folders:
     - combine (contains fasta file of each chromosomes)
 
 
-This script also uses [CombineFasta](https://github.com/njdbickhart/CombineFasta) to reorient the contigs in the same orientation as the reference genome.
+This script also uses [CombineFasta](https://github.com/njdbickhart/CombineFasta) to reorient the contigs in the same orientation as the reference genome. \
+This script also uses [VGP-pipeline]([https://github.com/njdbickhart/CombineFasta](https://github.com/VGP/vgp-assembly)) to get the telomere lengths.
+
 
 # Revisions
 
