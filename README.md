@@ -107,7 +107,7 @@ Description of columns:
 
 - `chr` - chromosome
 - `completion` - status of the chromosome (T means with telomere, noT means no telomere). There are 8 scenarios where you can either have T (with telomere) or noT (no telomere) at p-arm, with gap or no gap, and T or noT at q-arm. `T2T` indicates complete chromosome (telomere-to-telomere). For example, `noT_gap_T` means there is no telomere at p-arm, there is gap within the sequence and there is telomere at q-arm.
-- `score` - *to be implemented*
+- `score` - 2 if `T2T`, 1 if it has only 1 telomere
 - `contig_name` - the contig comprising of that chromosome
 - `contig` - number of contig aligning to that chromosome
 - `query_length` - total contig size (bp)
@@ -117,9 +117,15 @@ Description of columns:
 - `missing_contig` - will indicate `likely` if the `contig_align` is less than 100%
 - `gapcount` - number of gaps within the contigs
 - `total_gap_bp` - size of gaps in total (bp)
-- `telomere` - will indicate `p` if there's telomere in chromosome's short-arm, `q` if it's in chromosome's long-arm, `pq` if it's in both, or `0` if there is none. We counted presence of telomere if there is 50 counts of `TTAGGG/CCCTAA` within the 20Kbp window at each end of the sequence.
+- `telomere` - will indicate `p` if there's telomere in chromosome's short-arm, `q` if it's in chromosome's long-arm, `pq` if it's in both, or `0` if there is none. We consider presence of telomere if base on VGP-pipeline standard. Basically, 50% of the 1000bp window has the "TTAGGG" or "CCCTAA"
 - `p_count` - number of telomeric sequence (TTAGGG) in p-arm
 - `q-count` - number of telomeric sequence (TTAGGG) in q-arm
+- `p_len` - length of the telomere in p-arm
+- `q_len` - length of the telomere in the q-arm
+- `p_start` - start of the telomere in the p-arm
+- `p-end` - end of the telomere in the p-arm
+- `q_start` - start of the telomere in the q-arm
+- `q-end` - end of the telomere in the q-arm
 - `path_name` - the name of the contig pathway (this is useful for bandage visualisation)
 - `nodes` - the nodes sequence for that contig (this is useful for bandage visualisation. copy this sequence and paste it in `find node` in bandage to see this contig in the graph)
 
