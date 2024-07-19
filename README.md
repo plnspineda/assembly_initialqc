@@ -10,6 +10,7 @@ Script for checking homologous chromosomes with a reference genome and checking 
 - [tidk](https://github.com/tolkit/telomeric-identifier)
 - [seqtk](https://github.com/lh3/seqtk)
 - [Java](https://www.java.com/en/)
+- [bedtools](https://github.com/arq5x/bedtools2)
 
 ## Installation
 
