@@ -3,16 +3,13 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 
-args <- commandArgs(trailingOnly = TRUE)
-if (length(args) == 0) {
-  stop("No input files provided as an argument.")
-}
+## This is a version where I changed the criteria for the telomere. 2024.07.22
 
-dir <- normalizePath(args[1])
-gap <- normalizePath(args[2])
-telom <- normalizePath(args[3])
-telom_cutoff <- args[4]
-telom_length <- normalizePath(args[7])
+dir <- normalizePath("/Users/polenpineda/Downloads")
+gap <- normalizePath("/Users/polenpineda/Downloads/assembly.haplotype1.fasta_tmp_asm.coor")
+telom <- normalizePath("/Users/polenpineda/Downloads/telomere.count")
+telom_cutoff <- 50
+telom_length <- normalizePath("/Users/polenpineda/Downloads/assembly.haplotype1.fasta_tmp_asm.windows.0.5.1kb.ends.bed")
 
 t_cut <- as.numeric(telom_cutoff)
 print(t_cut)
@@ -20,31 +17,36 @@ print(t_cut)
 setwd(dir)
 print(getwd())
 
+# reading files
 df <- read_delim("all_chr_assembly.tsv")
 coor <- read_delim(gap, col_names = c("chr","gapstart","gapend"))
-telomere <- read_delim(telom, col_names = c("chr","start","end","value"))
+telomere <- read_delim(telom, col_names = TRUE)
+telomere <- telomere %>%
+  separate(chr, into = c("chr", "region"), sep = ":")
+names(telomere) <- c("chr", "region", "q_count", "p_count")
+telomere_length <- read_delim(telom_length, col_names = c("chr","start","end"))
 
 ## for gaps
 coor <- coor %>% mutate(gaplen = gapend - gapstart +1) %>%
   group_by(chr) %>%
   summarise(gapcount = n(), gapsize = sum(gaplen))
 
-## for telomeres
-tlm <- telomere %>%
-  group_by(chr) %>%
-  slice(c(1:2, (n() - 1):n())) %>%
-  summarise(p = sum(value[1:2]),
-            q = sum(value[(n() - 1):n()]))
+# ## for telomeres
+# tlm <- telomere %>%
+#   group_by(chr) %>%
+#   slice(c(1:2, (n() - 1):n())) %>%
+#   summarise(p = sum(value[1:2]),
+#             q = sum(value[(n() - 1):n()]))
 
 ## for telomere length with telomere_analysis.sh
 tlm_len <- telomere_length %>%
   mutate(p = ifelse(start < 1, end - start, NA),
          q = ifelse(start > 0, end - start, NA),
-         p_start = ifelse(start < 1, Start, NA),
+         p_start = ifelse(start < 1, start, NA),
          p_end = ifelse(start < 1, end, NA),
          q_start = ifelse(start > 0, start, NA),
          q_end = ifelse(start > 0, end, NA)) %>%
-  group_by(Chromosome) %>%
+  group_by(chr) %>%
   summarise(p_length = sum(p, na.rm = TRUE),
             q_length = sum(q, na.rm = TRUE),
             p_start = first(p_start[!is.na(p_start)]),
@@ -52,6 +54,14 @@ tlm_len <- telomere_length %>%
             q_start = first(q_start[!is.na(q_start)]),
             q_end = first(q_end[!is.na(q_end)])) %>%
   ungroup()
+
+## for telomere count
+tlm <- telomere %>%
+  group_by(chr) %>%
+  summarize(
+    p_count = sum(p_count, na.rm = TRUE),
+    q_count = sum(q_count, na.rm = TRUE)
+  )
 
 df_new <- merge(df, coor, by = "chr", all.x = TRUE)
 df_new <-  merge(df_new, tlm, by = "chr", all.x = TRUE)
@@ -61,27 +71,27 @@ df_new <- merge(df_new, tlm_len, by = "chr", all.x = TRUE)
 
 df_final <- df_new %>%
   mutate(telomere = case_when(
-    !is.na(p_len) & !is.na(q_len) ~ "pq",
-    !is.na(p_len) ~ "p",
-    !is.na(q_len) ~ "q",
+    !is.na(p_start) & !is.na(q_start) ~ "pq",
+    !is.na(p_start) ~ "p",
+    !is.na(q_start) ~ "q",
     TRUE ~ "0"
-    ),
-    completion = case_when(
-      telomere == "pq" & is.na(gapcount) ~ "T_2_T",
-      telomere == "pq" & !is.na(gapcount) ~ "T_gap_T",
-      telomere == "p" & is.na(gapcount) ~ "T_nogap_noT",
-      telomere == "p" & !is.na(gapcount) ~ "T_gap_noT",
-      telomere == "q" & is.na(gapcount) ~ "noT_nogap_T",
-      telomere == "q" & !is.na(gapcount) ~ "noT_gap_T",
-      telomere == "0" & is.na(gapcount) ~ "noT_nogap_noT",
-      TRUE ~ "noT_gap_noT"
-      ),
-      score = case_when(
-        telomere == "pq" ~ "2",
-        telomere == "p" ~ "1",
-        telomere == "q" ~ "1",
-        TRUE ~ "0"
-      )) %>%
+  ),
+  completion = case_when(
+    telomere == "pq" & is.na(gapcount) ~ "T_2_T",
+    telomere == "pq" & !is.na(gapcount) ~ "T_gap_T",
+    telomere == "p" & is.na(gapcount) ~ "T_nogap_noT",
+    telomere == "p" & !is.na(gapcount) ~ "T_gap_noT",
+    telomere == "q" & is.na(gapcount) ~ "noT_nogap_T",
+    telomere == "q" & !is.na(gapcount) ~ "noT_gap_T",
+    telomere == "0" & is.na(gapcount) ~ "noT_nogap_noT",
+    TRUE ~ "noT_gap_noT"
+  ),
+  score = case_when(
+    telomere == "pq" ~ "2",
+    telomere == "p" ~ "1",
+    telomere == "q" ~ "1",
+    TRUE ~ "0"
+  )) %>%
   select(chr,
          completion,
          score,
@@ -95,8 +105,14 @@ df_final <- df_new %>%
          gapcount,
          total_gap_bp = gapsize,
          telomere,
-         p_count = p,
-         q_count = q) %>%
+         p_count,
+         p_length,
+         q_count,
+         q_length,
+         p_start,
+         p_end,
+         q_start,
+         q_end) %>%
   arrange(factor(chr, levels = c(1:29, "X", "Y")))
 
 df_final[is.na(df_final)] <- 0

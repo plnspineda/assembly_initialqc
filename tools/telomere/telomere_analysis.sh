@@ -13,8 +13,8 @@ if [[ -z $genome ]]; then
     exit 0
 fi
 
-module load bedtools
-module load java/12.0.1
+#module load bedtools
+#module load java/12.0.1
 cpus=$SLURM_CPUS_PER_TASK
 
 mkdir -p $genome
@@ -43,7 +43,7 @@ if [[ -z $asm ]]; then
     echo "Failed to find fasta file."
     exit -1
 fi
-ln -s ../$asm 2> /dev/null
+ln -s $asm 2> /dev/null
 
 echo "Received $asm"
 prefix=`basename $asm`

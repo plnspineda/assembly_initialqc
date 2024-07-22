@@ -96,7 +96,9 @@ echo -e "Number of threads: "$threads""
 echo -e "Mapping query genome to reference genome"
 
 if [ ! -f "$dir/minimap.paf" ]; then
-    minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
+  echo "minimap.paf file found. Skipping minimap run."
+else
+  minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
 fi
 mkdir -p "$dir"/contig_list
 mkdir -p "$dir"/archived
@@ -164,39 +166,69 @@ seqtk cutN -n 3 -g "$outname" > $(basename "$outname" .fasta).coor
 
 echo -e "Running telomere_analysis.sh" to estimate telomere length
 
+export VGP_PIPELINE="$QC_dir/tools"
 telomerebase=$(basename "$outname" .fasta)
-"$QC_dir"/tools/telomere/telomere_analysis.sh telomere_"$telomerebase" 50 1000 "$dir"/"$outname"
 
-echo -e "Running tidk to count telomeres."
+echo -e "$VGP_PIPELINE/telomere/telomere_analysis.sh telomere_$telomerebase 0.5 1000 $dir/$outname"
+"$VGP_PIPELINE"/telomere/telomere_analysis.sh telomere_"$telomerebase" 0.5 1000 "$dir"/"$outname" || true
+
+# echo -e "Running tidk to count telomeres."
 # installed on conda activate centromere
+# tidk search -s TTAGGG -o "$telomerebase"_bedgraph_tidk-search --dir "$dir" -e bedgraph "$dir"/"$outname" -w 1000
+# tidk search -s TTAGGG -o "$telomerebase"_tsv_tidk-search --dir "$dir" -e tsv "$dir"/"$outname" -w 1000
+# echo -e "Generating plot..."
+# tidk plot -o "$telomerebase"_tidk-plot -t "$dir"/"$telomerebase"_tsv_tidk-search_telomeric_repeat_windows.tsv
 
-tidk search -s TTAGGG -o "$telomerebase"_bedgraph_tidk-search --dir "$dir" -e bedgraph "$dir"/"$outname" -w 10000
-tidk search -s TTAGGG -o "$telomerebase"_tsv_tidk-search --dir "$dir" -e tsv "$dir"/"$outname" -w 10000
-echo -e "Generating plot..."
-tidk plot -o "$telomerebase"_tidk-plot -t "$dir"/"$telomerebase"_tsv_tidk-search_telomeric_repeat_windows.tsv
+# echo -e "Generating count for sex chromosomes."
+# tidk search -s TTAGGG -o X_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/X.fasta -w 1000
+# tidk search -s TTAGGG -o Y_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/Y.fasta -w 1000
 
-echo -e "Generating count for sex chromosomes."
-tidk search -s TTAGGG -o X_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/X.fasta -w 10000
-tidk search -s TTAGGG -o Y_tsv_tidk-search --dir "$dir" -e tsv "$dir"/combine/Y.fasta -w 10000
+# echo -e "Generating plot for sex chromosomes."
 
-echo -e "Generating plot for sex chromosomes."
+# x_size=$(stat -c %s "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv)
+# y_size=$(stat -c %s "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv)
 
-x_size=$(stat -c %s "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv)
-y_size=$(stat -c %s "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv)
+# if [ "$x_size" -gt 4096 ]; then
+# 	tidk plot -o X_tidk-plot -t "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv
+# 	seqtk cutN -n 3 -g "$dir"/combine/X.fasta > "$dir"/X.coor
+# else
+# 	echo -e "No telomeres found for X"
+# fi
 
-if [ "$x_size" -gt 4096 ]; then
-	tidk plot -o X_tidk-plot -t "$dir"/X_tsv_tidk-search_telomeric_repeat_windows.tsv
-	seqtk cutN -n 3 -g "$dir"/combine/X.fasta > "$dir"/X.coor
-else
-	echo -e "No telomeres found for X"
-fi
+# if [ "$y_size" -gt 4096 ]; then
+# 	tidk plot -o Y_tidk-plot -t "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv
+# 	seqtk cutN -n 3 -g "$dir"/combine/Y.fasta > "$dir"/Y.coor
+# else
+# 	echo -e "No telomeres found for X"
+# fi
 
-if [ "$y_size" -gt 4096 ]; then
-	tidk plot -o Y_tidk-plot -t "$dir"/Y_tsv_tidk-search_telomeric_repeat_windows.tsv
-	seqtk cutN -n 3 -g "$dir"/combine/Y.fasta > "$dir"/Y.coor
-else
-	echo -e "No telomeres found for X"
-fi
+echo -e "Extract the telomeric regions based on telomere_analysis.sh"
+#!/bin/bash
+
+df1="$dir"/"$outname".fai
+df2=telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
+output="telomere_updated.bed"
+
+# Read df1 into an associative array
+declare -A df1_map
+while read -r col1 col2 col3 col4 col5; do
+    df1_map["$col1"]=$col2
+done < "$df1"
+
+while read -r col1 col2 col3; do
+    if [ "$col2" != "0" ]; then
+        if [ -n "${df1_map["$col1"]}" ]; then
+            col3=${df1_map["$col1"]}
+        fi
+    fi
+    echo -e "$col1\t$col2\t$col3" >> "$output"
+done < "$df2"
+
+echo -e "Updated bed file of telomeric region. Saved to $output."
+echo -e "Extracting telomeres fasta..."
+
+bedtools getfasta -fi $dir/$outname -bed telomere_updated.bed -fo telomere.fasta
+"$QC_dir"/utils/count_telomere.sh telomere.fasta telomere.count.txt
 
 echo -e "Running stat_moreinfo.R..."
 
@@ -205,10 +237,10 @@ echo "map file: $map"
 
 if [ "$path" = "0" ] && [ "$map" = "0" ]; then
   echo -e "No nodes path and map input, will not add nodes pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
+  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$telomerebase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 else
   echo -e "Nodes path and map provided, will add pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$tidkbase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
+  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$telomerebase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 fi
 
 echo "Done. :)"
