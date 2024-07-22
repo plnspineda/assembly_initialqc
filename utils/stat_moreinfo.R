@@ -5,13 +5,18 @@ library(tidyr)
 
 ## This is a version where I changed the criteria for the telomere. 2024.07.22
 
-dir <- normalizePath("/Users/polenpineda/Downloads")
-asm_path <- normalizePath("/Users/polenpineda/Downloads/assembly.paths.tsv")
-asm_map <- normalizePath("/Users/polenpineda/Downloads/assembly.scfmap")
-gap <- normalizePath("/Users/polenpineda/Downloads/assembly.haplotype1.fasta_tmp_asm.coor")
-telom <- normalizePath("/Users/polenpineda/Downloads/telomere.count")
-telom_cutoff <- 50
-telom_length <- normalizePath("/Users/polenpineda/Downloads/assembly.haplotype1.fasta_tmp_asm.windows.0.5.1kb.ends.bed")
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) == 0) {
+  stop("No input files provided as an argument.")
+}
+
+dir <- normalizePath(args[1])
+asm_path <- normalizePath(args[2])
+asm_map <- normalizePath(args[3])
+gap <- normalizePath(args[4])
+telom <- normalizePath(args[5])
+telom_cutoff <- args[6]
+telom_length <- normalizePath(args[7])
 
 t_cut <- as.numeric(telom_cutoff)
 print(t_cut)

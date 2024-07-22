@@ -203,11 +203,10 @@ echo -e "$VGP_PIPELINE/telomere/telomere_analysis.sh telomere_$telomerebase 0.5 
 # fi
 
 echo -e "Extract the telomeric regions based on telomere_analysis.sh"
-#!/bin/bash
 
 df1="$dir"/"$outname".fai
 df2=telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
-output="telomere_updated.bed"
+output="$dir/telomere_updated.bed"
 
 # Read df1 into an associative array
 declare -A df1_map
@@ -227,8 +226,8 @@ done < "$df2"
 echo -e "Updated bed file of telomeric region. Saved to $output."
 echo -e "Extracting telomeres fasta..."
 
-bedtools getfasta -fi $dir/$outname -bed telomere_updated.bed -fo telomere.fasta
-"$QC_dir"/utils/count_telomere.sh telomere.fasta telomere.count.txt
+bedtools getfasta -fi $dir/$outname -bed $dir/telomere_updated.bed -fo $dir/telomere.fasta
+"$QC_dir"/utils/count_telomere.sh $dir/telomere.fasta $dir/telomere.count.txt
 
 echo -e "Running stat_moreinfo.R..."
 
@@ -237,10 +236,10 @@ echo "map file: $map"
 
 if [ "$path" = "0" ] && [ "$map" = "0" ]; then
   echo -e "No nodes path and map input, will not add nodes pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$telomerebase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
+  Rscript "$QC_dir"/utils/stat_moreinfo_nopathmap.R "$dir" $(basename "$outname" .fasta).coor "$dir"/telomere.count.txt "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 else
   echo -e "Nodes path and map provided, will add pathway to the all_STATS.tsv file."
-  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$telomerebase"_bedgraph_tidk-search_telomeric_repeat_windows.bedgraph "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
+  Rscript "$QC_dir"/utils/stat_moreinfo.R "$dir" "$path" "$map" $(basename "$outname" .fasta).coor "$dir"/telomere.count.txt "$tel_cutoff" telomere_"$telomerebase"/*.windows.0.5.1kb.ends.bed
 fi
 
 echo "Done. :)"
