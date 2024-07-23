@@ -1,8 +1,9 @@
 #!/bin/bash
-## This is version 2.1
-### changes: made map and path file optional so could run with hifiasm assembly as well
-### changes: trying to add parameters... still commented as not yet tested
-## by PSPineda 2024.03.27 (polenpineda@gmail.com)
+## This is version 2.2
+# - changed the telomere analysis to include telomere_analysis.sh from [vgp-pipeline](https://github.com/VGP/vgp-assembly). Basically, in 5k window, will look for occurence of "TTAGGG" and if the window contains 50% of this repeat, then it will count as telomere length. (on-going)
+# - because of this, additional column in the *stat.txt for telomere length.
+# - T2T chromosome standard will also change based on the telomere_analysis.sh result
+## by PSPineda 2024.07.18 (polenpineda@gmail.com)
 
 set -euo pipefail
 
@@ -96,9 +97,7 @@ echo -e "Number of threads: "$threads""
 echo -e "Mapping query genome to reference genome"
 
 if [ ! -f "$dir/minimap.paf" ]; then
-  echo "minimap.paf file found. Skipping minimap run."
-else
-  minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
+    minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
 fi
 mkdir -p "$dir"/contig_list
 mkdir -p "$dir"/archived
@@ -162,6 +161,7 @@ fi
 cd ../
 
 echo -e "Running seqtk to get gap coordinates..."
+samtools faidx "$outname"
 seqtk cutN -n 3 -g "$outname" > $(basename "$outname" .fasta).coor
 
 echo -e "Running telomere_analysis.sh" to estimate telomere length
@@ -169,8 +169,9 @@ echo -e "Running telomere_analysis.sh" to estimate telomere length
 export VGP_PIPELINE="$QC_dir/tools"
 telomerebase=$(basename "$outname" .fasta)
 
-echo -e "$VGP_PIPELINE/telomere/telomere_analysis.sh telomere_$telomerebase 0.5 1000 $dir/$outname"
-"$VGP_PIPELINE"/telomere/telomere_analysis.sh telomere_"$telomerebase" 0.5 1000 "$dir"/"$outname" || true
+echo -e "$VGP_PIPELINE/telomere/telomere_analysis.sh telomere_$telomerebase 0.5 5000 $dir/$outname"
+"$VGP_PIPELINE"/telomere/telomere_analysis.sh telomere_"$telomerebase" 0.5 5000 "$dir"/"$outname" || true
+# this is T2T Han telomere analysis parameter used
 
 # echo -e "Running tidk to count telomeres."
 # installed on conda activate centromere

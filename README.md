@@ -155,7 +155,7 @@ This script also uses [VGP-pipeline]([https://github.com/njdbickhart/CombineFast
 
 ### Version 2.2 (July 18, 2024)
 changes:
-- changed the telomere analysis to include telomere_analysis.sh from [vgp-pipeline](https://github.com/VGP/vgp-assembly). Basically, in 1k window, will look for occurence of "TTAGGG" and if the window contains 50% of this repeat, then it will count as telomere length. (on-going)
+- changed the telomere analysis to include telomere_analysis.sh from [vgp-pipeline](https://github.com/VGP/vgp-assembly). Basically, in 5k window, will look for occurence of "TTAGGG" and if the window contains 50% of this repeat, then it will count as telomere length. (on-going)
 - because of this, additional column in the *stat.txt for telomere length.
 - T2T chromosome standard will also change based on the telomere_analysis.sh result
 
