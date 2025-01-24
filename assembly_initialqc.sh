@@ -97,7 +97,9 @@ echo -e "Number of threads: "$threads""
 echo -e "Mapping query genome to reference genome"
 
 if [ ! -f "$dir/minimap.paf" ]; then
-    minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
+  echo "Running minimap2 with the following command:"
+  echo "minimap2 $ref $qry -t $threads -x asm5 -o $dir/minimap.paf"
+  minimap2 "$ref" "$qry" -t "$threads" -x asm5 -o "$dir/minimap.paf"
 fi
 mkdir -p "$dir"/contig_list
 mkdir -p "$dir"/archived
