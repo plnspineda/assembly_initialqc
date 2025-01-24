@@ -14,7 +14,7 @@ dir <- normalizePath(args[1])
 gap <- normalizePath(args[2])
 telom <- normalizePath(args[3])
 telom_cutoff <- args[4]
-telom_length <- normalizePath(args[7])
+telom_length <- normalizePath(args[5])
 
 t_cut <- as.numeric(telom_cutoff)
 print(t_cut)
@@ -28,13 +28,14 @@ coor <- read_delim(gap, col_names = c("chr","gapstart","gapend"))
 telomere <- read_delim(telom, col_names = TRUE)
 telomere <- telomere %>%
   separate(chr, into = c("chr", "region"), sep = ":")
-names(telomere) <- c("chr", "region", "q_count", "p_count")
+names(telomere) <- c("chr", "region", "p_count", "q_count")
 telomere_length <- read_delim(telom_length, col_names = c("chr","start","end"))
 
 ## for gaps
 coor <- coor %>% mutate(gaplen = gapend - gapstart +1) %>%
   group_by(chr) %>%
   summarise(gapcount = n(), gapsize = sum(gaplen))
+
 
 # ## for telomeres
 # tlm <- telomere %>%
