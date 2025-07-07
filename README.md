@@ -2,6 +2,8 @@
 
 Script for checking homologous chromosomes with a reference genome and checking gap and telomeric sequence presence after contig assembly.
 
+Note: This is only for checking homologous chromosomes and may need manual checking of the results especially if the draft assembly is highly fragmented. As there are some repetitive fragments that will align to the reference chromosomes.
+
 ## Requirements
 
 - [R](https://www.r-project.org)
