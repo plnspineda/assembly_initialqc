@@ -109,7 +109,7 @@ echo -e "Running Rscript to get homologous chromosomes and Computing assembly an
 # Rscript findContigs.R "$ref" "$qry"
 
 Rscript --version
-Rscript "$QC_dir"/utils/stat_initialqc.R "$dir"
+Rscript "$QC_dir"/utils/stat_initialqc_loose.R "$dir"
 
 echo -e "Making combine folder and getting the contigs"
 mkdir -p "$dir"/combine
